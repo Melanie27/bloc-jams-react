@@ -5,6 +5,7 @@ import Landing from './components/Landing';
 import Library from './components/Library';
 import Album from './components/Album';
 
+
 class App extends Component {
   render() {
     return (
@@ -20,6 +21,7 @@ class App extends Component {
         <Route exact path="/" component={Landing} />
         <Route path="/library" component={Library} />
         <Route path="/album" component={Album} />
+        <Route path="/album/:slug" component={Album} />
        </main>  
       </div>
     );
