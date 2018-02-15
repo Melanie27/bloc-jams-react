@@ -11,10 +11,40 @@ class Album extends Component {
           });
       
           this.state = {
-            album: album
+            album: album,
+            currentSong: album.songs[0],
+            isPlaying: false
           };
+
+          this.audioElement = document.createElement('audio');
+          this.audioElement.src = album.songs[0].audioSrc;
     
     }
+
+    play() {
+        this.audioElement.play();
+        this.setState({isPlaying:true});
+    }
+
+    pause() {
+        this.audioElement.pause();
+        this.setState({ isPlaying: false });
+      }
+      
+      setSong(song) {
+        this.audioElement.src = song.audioSrc;
+        this.setState({ currentSong: song });
+      }
+      
+      handleSongClick(song) {
+        const isSameSong = this.state.currentSong === song;
+        if (this.state.isPlaying && isSameSong) {
+            this.pause(); //if user clicks on the currently playing song, assume they intend to pause it
+          } else {
+            if (!isSameSong) { this.setSong(song); } //switches to a different song if it's clicked on    
+            this.play();
+          }
+      }
     
      
     render() {
@@ -23,14 +53,11 @@ class Album extends Component {
             {this.props.match.params.slug} 
            
             <section id="album-info">
-            
                 <img id="album-cover-art" src={this.state.album.albumCover} alt="album cover"/>
-                
                 <div className="album-details">
-                <h1 id="album-title">{this.state.album.title}</h1>
-             <h2 className="artist">{this.state.album.artist}</h2>
-             <div id="release-info">{this.state.album.releaseInfo}</div>
-             
+                    <h1 id="album-title">{this.state.album.title}</h1>
+                    <h2 className="artist">{this.state.album.artist}</h2>
+                    <div id="release-info">{this.state.album.releaseInfo}</div>
                 </div>
             </section>
            
@@ -42,19 +69,20 @@ class Album extends Component {
                     <col id="song-duration-column" />
                 </colgroup>  
                 <tbody>
-                    {
-                        this.state.album.songs.map( (songs, index) =>
-                            <tr className ="song-details" key={index}>
-                                <td>
-                                {index}
+                    {this.state.album.songs.map( (songs, index) =>
+                            <tr className="song" key={index} onClick={() => this.handleSongClick(songs)} >
+                                <td className="song-actions">
+                                    <button>
+                                        <span className="song-number">{index+1}</span>
+                                        <span className="ion-play"></span>
+                                        <span className="ion-pause"></span>
+                                    </button>
                                 </td>
                                 <td >{songs.title}</td>
                                 <td >{songs.duration}</td>
                             </tr>
-                        ) 
-                    }
+                        )}
                 </tbody>
-               
             </table>
         </section>
       );
