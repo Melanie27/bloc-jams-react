@@ -76,12 +76,18 @@ class Album extends Component {
         this.play(newSong);
     }
 
-    handleNextClick() {
+    handleNextClick(i) {
         const currentIndex = this.state.album.songs.findIndex(song => this.state.currentSong === song);
-        const newIndex = Math.min(4, currentIndex + 1);
-        const newSong = this.state.album.songs[newIndex];
-        this.setSong(newSong);
-        this.play(newSong);
+        if ( currentIndex < this.state.album.songs.length-1) {
+            const newIndex = (currentIndex + 1);
+            const newSong = this.state.album.songs[newIndex];
+            this.setSong(newSong);
+            this.play(newSong);
+        } else {
+            const finalSong = this.state.album.songs[currentIndex];
+            this.setSong(finalSong);
+            this.play(finalSong);
+        } 
     }
 
     handleTimeChange(e) {
