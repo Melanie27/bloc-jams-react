@@ -16,7 +16,9 @@ class Album extends Component {
             currentSong: album.songs[0],
             currentTime: 0,
             duration: album.songs[0].duration,
-            isPlaying: false
+            isPlaying: false,
+            hover: false,
+            isPaused: null
           };
 
           this.audioElement = document.createElement('audio');
@@ -27,11 +29,13 @@ class Album extends Component {
     play() {
         this.audioElement.play();
         this.setState({isPlaying:true});
+       
     }
 
     pause() {
         this.audioElement.pause();
         this.setState({ isPlaying: false });
+       
       }
 
     componentDidMount() {
@@ -95,6 +99,20 @@ class Album extends Component {
         this.audioElement.currentTime = newTime;
         this.setState({ currentTime: newTime });
       }
+
+      buttonClass() {
+        
+        if (this.state.isPlaying) {
+            return 'ion-pause'
+            
+        } else if (this.state.isPaused){
+            //(some index comparison to state for play) 
+            return 'ion-play'
+        } else {
+            return 'base-class'
+        }
+        
+    }  
     
      
     render() {
@@ -122,11 +140,11 @@ class Album extends Component {
                     {this.state.album.songs.map( (songs, index) =>
                             <tr className="song" key={index} onClick={() => this.handleSongClick(songs)} >
                                 <td className="song-actions">
-                                    <button>
-                                        <span className="song-number">{index+1}</span>
-                                        <span className="ion-play"></span>
-                                        <span className="ion-pause"></span>
+                                    <button className="mdl-button mdl-button--colored ">
+                                        <span className={this.buttonClass()} >{index+ 1}   </span>
+                                        
                                     </button>
+                                   
                                 </td>
                                 <td >{songs.title}</td>
                                 <td >{songs.duration}</td>
