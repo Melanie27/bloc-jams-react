@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 class PlayerBar extends Component {
     render() {
         return(
-            <section className="player-bar">
+            <section className="player-bar mdl-cell--4-col">
                  <section id="buttons">
                     <button id="previous" onClick={this.props.handlePrevClick}>
                       <span className="ion-skip-backward"></span>
@@ -20,7 +20,7 @@ class PlayerBar extends Component {
                 <div className="current-time">{this.props.formatTime(this.props.currentTime)} </div>
                   <input 
                     type="range" 
-                    className="seek-bar" 
+                    className="seek-bar mdl-slider mdl-js-slide" 
                     value={(this.props.currentTime / this.props.duration) || 0} 
                     max="1" 
                     min="0" 
@@ -33,7 +33,7 @@ class PlayerBar extends Component {
               <div className="icon ion-volume-low"></div>
                 <input
                  type="range"
-                 className="volume-bar"
+                 className="volume-bar mdl-slider mdl-js-slider"
                  value={ this.props.currentVolume }
                  max="1" 
                  min="0" 

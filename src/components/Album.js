@@ -17,7 +17,9 @@ class Album extends Component {
             currentTime: 0,
             duration: album.songs[0].duration,
             currentVolume: .3,
-            isPlaying: false
+            isPlaying: false,
+            displayHover:album.songs.map(() => false),
+            displaySongNumber: album.songs.map(() => true)
             
 
           };
@@ -68,6 +70,9 @@ class Album extends Component {
     setSong(song) {
         this.audioElement.src = song.audioSrc;
         this.setState({ currentSong: song });
+        let newDisplay = this.state.album.songs.map(() => true);
+        newDisplay[this.state.album.songs.indexOf(song)] = false;
+        this.setState({displaySongNumber: newDisplay});
       }
       
     handleSongClick(song) {
@@ -78,6 +83,9 @@ class Album extends Component {
             if (!isSameSong) { this.setSong(song); } //switches to a different song if it's clicked on    
             this.play();
           }
+          let newDisplay = this.state.album.songs.map(() => true);
+          newDisplay[this.state.album.songs.indexOf(song)] = false;
+          this.setState({ displaySongNumber: newDisplay }); 
       }
 
     handlePrevClick() {
@@ -108,10 +116,6 @@ class Album extends Component {
         this.setState({ currentTime: this.formatTime(newTime) });
       }
 
-      
-        
-        
-    
 
     handleVolumeChange(e) {
         const newVolume = e.target.value;
@@ -129,28 +133,55 @@ class Album extends Component {
 
     }
 
-    buttonClass() {
-        
+    buttonClass(index) {
+      
+       if((this.state.isPlaying) && this.state.currentSong === this.state.album.songs[index]){
+        //console.log(index); 
+            return "ion-pause";
+            return "ion-play " + "song-number-" + index;
+       } else if ((!this.state.isPlaying) && this.state.currentSong === this.state.album.songs[index]) {
+            return "ion-play " + "song-number-" + index;
+        } else {
+            return "song-number-" + index;
+        }
+               
     }
 
-   
+    hoverOn(e, index) {
+           
+        const newDisplay = this.state.displayHover.map((disp, indexDisp) =>  indexDisp === index ? true : false )
+        this.setState({ displayHover : newDisplay });
+    }
+           
+         
+    hoverOff() {
+      const newDisplay = this.state.displayHover.map(() => false);
+       this.setState({ displayHover : newDisplay });
+    }
+           
+           
      
     render() {
-      return (
-        <section className="album">
-            {this.props.match.params.slug} 
+       
+       
+
+        return (
+            
+        <section className="album mdl-grid">
            
-            <section id="album-info">
+           
+            <section id="album-info" className="mdl-cell--4-col">
                 <img id="album-cover-art" src={this.state.album.albumCover} alt="album cover"/>
-                <div className="album-details">
-                    <h1 id="album-title">{this.state.album.title}</h1>
-                    <h2 className="artist">{this.state.album.artist}</h2>
-                    <div id="release-info">{this.state.album.releaseInfo}</div>
-                </div>
+                
             </section>
            
+            <div className="album-details mdl-cell--8-col">
+                    <h2 id="album-title">{this.state.album.title}</h2>
+                    <h3 className="artist">{this.state.album.artist}</h3>
+                    <h4 id="release-info">{this.state.album.releaseInfo}</h4>
 
-            <table id="song-list">
+
+             <table id="song-list" class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-cell--12-col">
                 <colgroup>
                     <col id="song-number-column" />
                     <col id="song-title-column" />
@@ -158,20 +189,21 @@ class Album extends Component {
                 </colgroup>  
                 <tbody>
                     {this.state.album.songs.map( (song, index) =>
-                            <tr className="song" key={index} onClick={() => this.handleSongClick(song)} >
-                                <td className="song-actions">
+                            <tr className="song" key={index} onMouseEnter={(e) => this.hoverOn(e, index)} onMouseLeave={() => this.hoverOff()} onClick={() => this.handleSongClick(song)} >
+                                <td className= "mdl-data-table__cell--non-numeric">
                                     <button className="mdl-button mdl-button--colored ">
-                                        <span className={this.buttonClass()} >{index+ 1}   </span>
-                                        
+                                    <span className={this.buttonClass(index)} style={{display: this.state.displayHover[index] || this.state.displaySongNumber[index] ? "none" : "" }}></span>
+                                        <span className="hi" style={{display: this.state.displayHover[index] || !this.state.displaySongNumber[index] ? "none" : "" }}>{index}</span>
+                                        <span className="ion-play" style={{display: this.state.displayHover[index] ? "" : "none" }}></span>
                                     </button>
-                                   
                                 </td>
                                 <td >{song.title}</td>
                                 <td >{this.formatTime(song.duration)}</td>
                             </tr>
                         )}
                 </tbody>
-            </table>
+            </table>        
+            </div>
             <PlayerBar
            isPlaying={this.state.isPlaying}
            currentSong={this.state.currentSong}
@@ -187,6 +219,8 @@ class Album extends Component {
            formatTime={(time) => this.formatTime(time)}
            
          />
+           
+            
         </section>
       );
     }

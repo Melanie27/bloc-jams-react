@@ -11,15 +11,19 @@ class Library extends Component {
     
     render() {
         return (
-            <section className='library'>
+            <section className='library '>
                 
                 {
                     this.state.albums.map( (album, index) =>
                         <Link to={`/album/${album.slug}`} key={index} >   
-                            <img src={album.albumCover} alt={album.title} />
-                            <div>{album.title}</div>
-                            <div>{album.artist}</div>
-                             <div>{album.songs.length} songs</div>
+                            <section className ="album mdl-grid">
+                            <img className="mdl-cell--8-col album-img" src={album.albumCover} alt={album.title} />
+                            <div className="mdl-cell--4-col">
+                                <div><h2>{album.title}</h2></div>
+                                <div><h3>{album.artist}</h3></div>
+                                <div><h4>{album.songs.length} songs</h4></div>
+                            </div>
+                            </section>
                         </Link>
                     ) 
                 }

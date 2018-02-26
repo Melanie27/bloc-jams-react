@@ -10,15 +10,19 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-       <header>
-         <nav>
-           <Link to='/'>Landing</Link>
-           <Link to='/library'>Library</Link>
-        </nav>
-         <h1>Bloc Jams</h1>
+       <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+        <span class="mdl-layout-title">Bloc Jams</span>
+        <div class="mdl-layout-spacer"></div>
+          <nav class="mdl-navigation">
+          <a class="mdl-navigation__link"><Link to='/'>Landing</Link></a>
+          <a class="mdl-navigation__link"> <Link to='/library'>Library</Link></a>
+          </nav>
+         </div> 
+        
         </header>
-       <main>
-        <Route exact path="/" component={Landing} />
+       <main class="mdl-layout__content">
+       <Route exact path="/" component={Landing} />
         <Route path="/library" component={Library} />
         
         <Route path="/album/:slug" component={Album} />
